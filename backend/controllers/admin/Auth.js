@@ -76,6 +76,32 @@ exportFuns.login = async (req, res) => {
   }
 };
 
+exportFuns.logout = async (req, res) => {
+  try {
+    var userId = _.trim(req.user._id) || "";
+    var errors = [];
+
+    var findPattern = {
+      _id: userId,
+    };
+
+    let updateField = { auth_token: "", device_token: "" };
+
+    var userdata = await AdminsService.findOneAndUpdate(
+      findPattern,
+      updateField
+    );
+    if (!userdata) {
+      errors.push({ errField: "_id", errText: "LOGOUT_FAILED" });
+      Response.send(req, res, 400, errors.errText, {});
+    } else {
+      Response.send(req, res, 200, "LOGIN_SUCCESS", {});
+    }
+  } catch (err) {
+    Response.send(req, res, 500, err.message);
+  }
+};
+
 /*
 | Register User
 | /api/v1/users/register
