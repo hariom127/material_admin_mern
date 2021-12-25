@@ -1,7 +1,7 @@
-"use strict";
+'use strict'
 
-var User = require("./User");
+var Users = require('./Users')
 
 module.exports = {
-  UserModel: User,
-};
+  UsersModel: Users,
+}

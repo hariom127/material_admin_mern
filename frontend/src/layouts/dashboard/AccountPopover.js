@@ -1,5 +1,6 @@
 import { Icon } from '@iconify/react';
 import { useRef, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import homeFill from '@iconify/icons-eva/home-fill';
 import personFill from '@iconify/icons-eva/person-fill';
 import settings2Fill from '@iconify/icons-eva/settings-2-fill';
@@ -12,6 +13,7 @@ import { Button, Box, Divider, MenuItem, Typography, Avatar, IconButton } from '
 import MenuPopover from '../../components/MenuPopover';
 //
 // import account from '../../_mocks_/account';
+import { logout } from '../../redux/action/authAction';
 
 // ----------------------------------------------------------------------
 
@@ -36,8 +38,10 @@ const MENU_OPTIONS = [
 // ----------------------------------------------------------------------
 
 export default function AccountPopover() {
-  const user = JSON.parse(localStorage.getItem('user'));
-  console.log(user);
+  const userData = useSelector((state) => state.authState);
+  const { firstName, lastName, email, phone, profile } =
+    userData && userData.user ? userData.user : {};
+
   const anchorRef = useRef(null);
   const [open, setOpen] = useState(false);
 
@@ -46,6 +50,12 @@ export default function AccountPopover() {
   };
   const handleClose = () => {
     setOpen(false);
+  };
+
+  // logout the user
+  const dispatch = useDispatch();
+  const callLogout = () => {
+    dispatch(logout());
   };
 
   return (
@@ -70,7 +80,7 @@ export default function AccountPopover() {
           })
         }}
       >
-        <Avatar src={user.profile} alt={user.first_name} />
+        <Avatar src={profile} />
       </IconButton>
 
       <MenuPopover
@@ -81,10 +91,10 @@ export default function AccountPopover() {
       >
         <Box sx={{ my: 1.5, px: 2.5 }}>
           <Typography variant="subtitle1" noWrap>
-            {user.first_name}
+            {firstName}
           </Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-            {user.email}
+            {email}
           </Typography>
         </Box>
 
@@ -113,7 +123,7 @@ export default function AccountPopover() {
         ))}
 
         <Box sx={{ p: 2, pt: 1.5 }}>
-          <Button fullWidth color="inherit" variant="outlined">
+          <Button fullWidth color="inherit" variant="outlined" onClick={callLogout}>
             Logout
           </Button>
         </Box>

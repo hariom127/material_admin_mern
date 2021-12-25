@@ -1,21 +1,33 @@
+import { Toast } from '../../components/sweetalert/swal';
 import axios from '../../helper/axios';
 import { ActionTypes } from '../constant/action-type';
 
 export const login = (user) => async (dispatch) => {
   try {
     dispatch({ type: ActionTypes.LOGIN_REQUEST, payload: user });
-    const res = await axios.post(`/admin/login`, { ...user });
+    const res = await axios.post(`/admin/auth/login`, { ...user });
     if (res.status === 200) {
-      const token = res.data.data.auth_token;
-      const user = res.data.data;
+      const { token, user } = res.data ? res.data : {};
       localStorage.setItem('token', token);
       localStorage.setItem('user', JSON.stringify(user));
       dispatch({ type: ActionTypes.LOGIN_SUCCESS, payload: { token, user } });
+      const msg = res?.data?.message ? res?.data?.message : 'success';
+      Toast.fire({
+        icon: 'success',
+        title: msg
+      });
     }
   } catch (error) {
     dispatch({
       type: ActionTypes.LOGIN_FAILER,
       payload: { error }
+    });
+    const msg = error?.response?.data?.message
+      ? error?.response?.data?.message
+      : 'Something went wrong!';
+    Toast.fire({
+      icon: 'error',
+      title: msg
     });
   }
 };
@@ -56,12 +68,15 @@ export const isUserLogedIn = () => async (dispatch) => {
 };
 
 export const logout = () => async (dispatch) => {
-  dispatch({ type: ActionTypes.LOGOUT_REQUEST });
-  const res = await axios.post(`/admin/logout`);
-  if (res.status === 200) {
-    localStorage.clear();
-    dispatch({ type: ActionTypes.LOGOUT_SUCCESS });
-  } else {
-    dispatch({ type: ActionTypes.LOGOUT_FAILED, payload: res.data.error });
+  try {
+    dispatch({ type: ActionTypes.LOGOUT_REQUEST });
+    window.localStorage.clear();
+    const res = await axios.post(`/admin/auth/logout`);
+    if (res.status === 200) {
+      localStorage.clear();
+      dispatch({ type: ActionTypes.LOGOUT_SUCCESS });
+    }
+  } catch (error) {
+    dispatch({ type: ActionTypes.LOGOUT_FAILED, payload: error.message });
   }
 };

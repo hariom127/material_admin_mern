@@ -1,7 +1,9 @@
-"use strict";
+var express = require('express');
+var router = express.Router();
 
-var AdminRoutes = require("./admin");
+/* GET home page. */
+router.get('/', function(req, res, next) {
+  res.render('index', { title: 'Express' });
+});
 
-module.exports = {
-  AdminRoutes: AdminRoutes,
-};
+module.exports = router;

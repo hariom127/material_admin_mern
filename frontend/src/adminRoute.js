@@ -8,22 +8,22 @@ import Register from './pages/Register';
 import DashboardApp from './pages/DashboardApp';
 import Products from './pages/Products';
 import Blog from './pages/Blog';
-import User from './pages/User1';
+import UserList from './pages/user/UserList';
 import NotFound from './pages/Page404';
 
 // ----------------------------------------------------------------------
 
-export default function Router() {
+export default function AdminRoute() {
   return useRoutes([
     {
-      path: '/',
-      element: <LogoOnlyLayout />,
+      path: '/dashboard',
+      element: <DashboardLayout />,
       children: [
-        { path: 'login', element: <Login /> },
-        { path: 'register', element: <Register /> },
-        { path: '404', element: <NotFound /> },
-        { path: '/', element: <Navigate to="/dashboard" /> }
-        // { path: '*', element: <Navigate to="/404" /> }
+        { element: <Navigate to="/dashboard/app" replace /> },
+        { path: 'app', element: <DashboardApp /> },
+        { path: 'user', element: <UserList /> },
+        { path: 'products', element: <Products /> },
+        { path: 'blog', element: <Blog /> }
       ]
     }
     // { path: '*', element: <Navigate to="/404" replace /> }

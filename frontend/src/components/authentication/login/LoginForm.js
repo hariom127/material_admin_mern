@@ -1,5 +1,5 @@
+import { useState, useEffect } from 'react';
 import * as Yup from 'yup';
-import { useState } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 
 import { useFormik, Form, FormikProvider } from 'formik';
@@ -23,9 +23,16 @@ import { login } from '../../../redux/action/authAction';
 // ----------------------------------------------------------------------
 
 export default function LoginForm() {
-  const auth = useSelector((state) => state.authState);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const auth = useSelector((state) => state.authState);
+
+  useEffect(() => {
+    if (auth.authenticate && auth.token) {
+      navigate('/dashboard', { replace: true });
+    }
+  }, [auth]);
+
   const [showPassword, setShowPassword] = useState(false);
 
   const LoginSchema = Yup.object().shape({
@@ -42,7 +49,7 @@ export default function LoginForm() {
     validationSchema: LoginSchema,
     onSubmit: (values, action) => {
       console.log(action);
-      // navigate('/dashboard', { replace: true });
+
       dispatch(login(values));
     }
   });
@@ -52,9 +59,7 @@ export default function LoginForm() {
   const handleShowPassword = () => {
     setShowPassword((show) => !show);
   };
-  if (auth.authenticate) {
-    navigate('/dashboard/app', { replace: true });
-  }
+
   return (
     <FormikProvider value={formik}>
       <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
@@ -105,7 +110,7 @@ export default function LoginForm() {
           size="large"
           type="submit"
           variant="contained"
-          loading={isSubmitting}
+          loading={auth.loading}
         >
           Login
         </LoadingButton>

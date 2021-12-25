@@ -15,6 +15,7 @@ export default function GlobalStyles() {
           padding: 0,
           boxSizing: 'border-box'
         },
+
         html: {
           width: '100%',
           height: '100%',
