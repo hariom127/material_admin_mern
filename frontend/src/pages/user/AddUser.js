@@ -14,6 +14,7 @@ import * as Yup from 'yup';
 import { LoadingButton } from '@mui/lab';
 import { Icon } from '@iconify/react';
 import { createUser } from '../../redux/action/userAction';
+import Modal from '../../components/modal';
 
 const Input = styled('input')({
   display: 'none'
@@ -107,100 +108,106 @@ const AddUser = forwardRef((props, ref) => {
 
   return (
     <div>
-      <Dialog open={open} onClose={handleClose} fullWidth maxWidth="md">
-        <DialogTitle>Add User </DialogTitle>
+      {/* modal */}
 
+      <Modal show={props.show} close={props.close} title="Add User">
         <br />
-        <DialogContent>
-          <FormikProvider value={formik}>
-            <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
-              <Stack spacing={3}>
-                <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
-                  <TextField
-                    fullWidth
-                    label="First name"
-                    {...getFieldProps('firstName')}
-                    error={Boolean(touched.firstName && errors.firstName)}
-                    helperText={touched.firstName && errors.firstName}
-                  />
+        <FormikProvider value={formik}>
+          <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
+            <Stack spacing={3}>
+              <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+                <TextField
+                  fullWidth
+                  label="First name"
+                  {...getFieldProps('firstName')}
+                  error={Boolean(touched.firstName && errors.firstName)}
+                  helperText={touched.firstName && errors.firstName}
+                />
 
-                  <TextField
-                    fullWidth
-                    label="Last name"
-                    {...getFieldProps('lastName')}
-                    error={Boolean(touched.lastName && errors.lastName)}
-                    helperText={touched.lastName && errors.lastName}
-                  />
-                </Stack>
-                <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
-                  <TextField
-                    fullWidth
-                    autoComplete="username"
-                    type="email"
-                    label="Email address"
-                    {...getFieldProps('email')}
-                    error={Boolean(touched.email && errors.email)}
-                    helperText={touched.email && errors.email}
-                  />
-                  <TextField
-                    fullWidth
-                    label="Phone"
-                    {...getFieldProps('phone')}
-                    error={Boolean(touched.phone && errors.phone)}
-                    helperText={touched.phone && errors.phone}
-                  />
-                </Stack>
-                <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
-                  <Button
-                    variant="contained"
-                    component="label"
-                    startIcon={<Icon icon="bx:bx-image-add" />}
-                  >
-                    Upload
-                    <input type="file" accept="image/*" hidden onChange={onChnageImage} />
-                  </Button>
-
-                  <IconButton
-                    sx={{
-                      padding: 0,
-                      width: 44,
-                      height: 44,
-                      ...(open && {
-                        '&:before': {
-                          zIndex: 1,
-                          content: "''",
-                          width: '100%',
-                          height: '100%',
-                          borderRadius: '50%',
-                          position: 'absolute'
-                          // bgcolor: (theme) => alpha(theme.palette.grey[900], 0.72)
-                        }
-                      })
-                    }}
-                  >
-                    <Avatar src={profileImgPreview} />
-                  </IconButton>
-                </Stack>
+                <TextField
+                  fullWidth
+                  label="Last name"
+                  {...getFieldProps('lastName')}
+                  error={Boolean(touched.lastName && errors.lastName)}
+                  helperText={touched.lastName && errors.lastName}
+                />
               </Stack>
-            </Form>
-          </FormikProvider>
-        </DialogContent>
-        <DialogActions>
-          <LoadingButton
-            onClick={handleSubmit}
-            size="large"
-            type="button"
-            variant="contained"
-            loading={isSubmitting}
-          >
-            Register
-          </LoadingButton>
+              <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+                <TextField
+                  fullWidth
+                  autoComplete="username"
+                  type="email"
+                  label="Email address"
+                  {...getFieldProps('email')}
+                  error={Boolean(touched.email && errors.email)}
+                  helperText={touched.email && errors.email}
+                />
+                <TextField
+                  fullWidth
+                  label="Phone"
+                  {...getFieldProps('phone')}
+                  error={Boolean(touched.phone && errors.phone)}
+                  helperText={touched.phone && errors.phone}
+                />
+              </Stack>
+              <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+                <Button
+                  variant="outlined"
+                  component="label"
+                  startIcon={<Icon icon="bx:bx-image-add" />}
+                >
+                  Upload
+                  <input type="file" accept="image/*" hidden onChange={onChnageImage} />
+                </Button>
 
-          <Button size="large" color="warning" variant="contained" onClick={handleClose}>
-            Cancel
-          </Button>
-        </DialogActions>
-      </Dialog>
+                <IconButton
+                  sx={{
+                    padding: 0,
+                    width: 44,
+                    height: 44,
+                    ...(open && {
+                      '&:before': {
+                        zIndex: 1,
+                        content: "''",
+                        width: '100%',
+                        height: '100%',
+                        borderRadius: '50%',
+                        position: 'absolute'
+                        // bgcolor: (theme) => alpha(theme.palette.grey[900], 0.72)
+                      }
+                    })
+                  }}
+                >
+                  <Avatar src={profileImgPreview} />
+                </IconButton>
+              </Stack>
+              <div align="end">
+                <LoadingButton
+                  onClick={handleSubmit}
+                  size="large"
+                  type="button"
+                  variant="contained"
+                  loading={isSubmitting}
+                  style={{ marginRight: '10px' }}
+                >
+                  Register
+                </LoadingButton>
+
+                <Button
+                  onClick={props.close}
+                  size="large"
+                  type="button"
+                  variant="contained"
+                  color="error"
+                >
+                  Cancel
+                </Button>
+              </div>
+            </Stack>
+          </Form>
+        </FormikProvider>
+      </Modal>
+      {/* modal */}
     </div>
   );
 });

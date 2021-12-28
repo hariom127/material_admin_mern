@@ -34,6 +34,7 @@ import AddUser from './AddUser';
 import { getUsers, deleteUser, updateStatus } from '../../redux/action/userAction';
 //
 import USERLIST from '../../_mocks_/user';
+
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
@@ -85,9 +86,14 @@ const UserList = () => {
     dispatch(updateStatus(id, !status));
   };
 
+  // modal
+  const [modal, setModal] = useState(false);
+  const Toggle = () => setModal(!modal);
+
   return (
     <Page title="User | Minimal-UI">
-      <AddUser ref={childRef} />
+      <AddUser show={modal} close={Toggle} />
+
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
@@ -98,7 +104,7 @@ const UserList = () => {
             component={RouterLink}
             to="#"
             startIcon={<Icon icon={plusFill} />}
-            onClick={() => childRef.current.handleClickOpen()}
+            onClick={() => Toggle()}
           >
             New User
           </Button>
